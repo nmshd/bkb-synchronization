@@ -56,7 +56,7 @@ namespace Synchronization.API.Extensions
         public string ValidIssuer { get; set; }
         public string JwtSigningCertificate { get; set; }
     }
-    
+
     public class KeyVaultConfiguration
     {
         public string ClientId { get; set; }
