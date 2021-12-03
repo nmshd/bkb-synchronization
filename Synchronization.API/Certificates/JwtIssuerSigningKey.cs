@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using Enmeshed.Tooling.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -49,7 +50,7 @@ namespace Synchronization.API.Certificates
 
         private static byte[] ReadStream(Stream input)
         {
-            var buffer = new byte[16 * 1024];
+            var buffer = new byte[16.Kibibytes()];
 
             using var ms = new MemoryStream();
 

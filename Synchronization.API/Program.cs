@@ -2,6 +2,7 @@
 using System.Linq;
 using Azure.Identity;
 using Enmeshed.BuildingBlocks.API.Extensions;
+using Enmeshed.Tooling.Extensions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -49,7 +50,7 @@ namespace Synchronization.API
                 .UseKestrel(options =>
                 {
                     options.AddServerHeader = false;
-                    options.Limits.MaxRequestBodySize = 128 * 1024; // 128 kB
+                    options.Limits.MaxRequestBodySize = 128.Kibibytes();
                 })
                 .ConfigureAppConfiguration(AddAzureAppConfiguration)
                 .UseStartup<Startup>();

@@ -2,10 +2,10 @@
 using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.EventBus;
 using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.UserContext;
 using Enmeshed.DevelopmentKit.Identity.ValueObjects;
-using Moq;
-using Synchronization.Application.AutoMapper;
 using Enmeshed.Tooling;
 using Enmeshed.UnitTestTools.BaseClasses;
+using Moq;
+using Synchronization.Application.AutoMapper;
 using Synchronization.Infrastructure.Persistence.Database;
 
 namespace Synchronization.Application.Tests.Tests.DatawalletEvents

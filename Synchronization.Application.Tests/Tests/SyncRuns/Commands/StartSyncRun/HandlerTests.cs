@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Enmeshed.BuildingBlocks.Application.Abstractions.Exceptions;
 using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.UserContext;
 using Enmeshed.DevelopmentKit.Identity.ValueObjects;
+using Enmeshed.Tooling;
+using Enmeshed.UnitTestTools.BaseClasses;
 using FakeItEasy;
 using FluentAssertions;
 using Synchronization.Application.AutoMapper;
@@ -13,8 +15,6 @@ using Synchronization.Application.SyncRuns.Commands.StartSyncRun;
 using Synchronization.Application.SyncRuns.DTOs;
 using Synchronization.Domain.Entities;
 using Synchronization.Domain.Entities.Sync;
-using Enmeshed.Tooling;
-using Enmeshed.UnitTestTools.BaseClasses;
 using Synchronization.Infrastructure.Persistence.Database;
 using Xunit;
 
