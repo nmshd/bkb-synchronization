@@ -4,10 +4,10 @@ namespace Synchronization.Application.IntegrationEvents.Incoming.RelationshipCha
 {
     public class RelationshipChangeCompletedIntegrationEvent : IntegrationEvent
     {
-        public string ChangeId { get; private set; }
-        public string RelationshipId { get; private set; }
-        public string ChangeCreatedBy { get; private set; }
-        public string ChangeRecipient { get; private set; }
-        public string ChangeResult { get; private set; }
+        public string ChangeId { get; set; }
+        public string RelationshipId { get; set; }
+        public string ChangeCreatedBy { get; set; }
+        public string ChangeRecipient { get; set; }
+        public string ChangeResult { get; set; }
     }
 }
