@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Synchronization.Infrastruct
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Synchronization.Domain.Tests", "Synchronization.Domain.Tests\Synchronization.Domain.Tests.csproj", "{F1E17A97-8010-4DC3-97B7-C758ECC271FC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C617135E-C051-43EC-BDF8-7BD6AC174585}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{05E50C7F-5944-4F26-B7B7-7A3241993970}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +52,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A35E4FC0-87EF-4F4F-9CF6-2E7BF8840BD5} = {C617135E-C051-43EC-BDF8-7BD6AC174585}
+		{6FBC2D11-BB02-4D3E-96CC-0863BAAA9AE2} = {C617135E-C051-43EC-BDF8-7BD6AC174585}
+		{D4C19285-8E21-4740-89B6-8262C00007F1} = {05E50C7F-5944-4F26-B7B7-7A3241993970}
+		{D654F62C-FFEF-4081-BD8F-2FC012FAEFE1} = {C617135E-C051-43EC-BDF8-7BD6AC174585}
+		{F18F2578-B900-4668-8EAD-CD05D835FD8B} = {C617135E-C051-43EC-BDF8-7BD6AC174585}
+		{F1E17A97-8010-4DC3-97B7-C758ECC271FC} = {05E50C7F-5944-4F26-B7B7-7A3241993970}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D6412B1D-EBA1-4DF8-8A5A-C4A9B280CB14}
