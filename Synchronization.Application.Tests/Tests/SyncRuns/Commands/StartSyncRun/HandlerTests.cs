@@ -32,7 +32,7 @@ namespace Synchronization.Application.Tests.Tests.SyncRuns.Commands.StartSyncRun
         }
 
         [Fact]
-        public void Cannot_start_sync_run_when_another_one_is_running()
+        public async Task Cannot_start_sync_run_when_another_one_is_running()
         {
             // Arrange
             var handler = CreateHandler(_activeIdentity);
@@ -46,7 +46,7 @@ namespace Synchronization.Application.Tests.Tests.SyncRuns.Commands.StartSyncRun
 
 
             // Assert
-            acting.Should().Throw<OperationFailedException>().WithErrorCode("error.platform.validation.syncRun.cannotStartSyncRunWhenAnotherSyncRunIsRunning");
+            await acting.Should().ThrowAsync<OperationFailedException>().WithErrorCode("error.platform.validation.syncRun.cannotStartSyncRunWhenAnotherSyncRunIsRunning");
         }
 
         [Fact]

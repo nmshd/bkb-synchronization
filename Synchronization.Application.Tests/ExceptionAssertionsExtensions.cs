@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Enmeshed.BuildingBlocks.Application.Abstractions.Exceptions;
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -17,10 +18,7 @@ namespace Synchronization.Application.Tests
     public class ApplicationExceptionAssertions :
         ReferenceTypeAssertions<ApplicationException, ApplicationExceptionAssertions>
     {
-        public ApplicationExceptionAssertions(ApplicationException instance)
-        {
-            Subject = instance;
-        }
+        public ApplicationExceptionAssertions(ApplicationException instance) : base(instance) { }
 
         protected override string Identifier => "ApplicationException";
 
@@ -42,6 +40,11 @@ namespace Synchronization.Application.Tests
         public static void WithErrorCode<T>(this ExceptionAssertions<T> assertions, string code) where T : ApplicationException
         {
             assertions.Which.Code.Should().Be(code);
+        }
+
+        public static async Task WithErrorCode<T>(this Task<ExceptionAssertions<T>> assertions, string code) where T : ApplicationException
+        {
+            (await assertions).WithErrorCode(code);
         }
     }
 }

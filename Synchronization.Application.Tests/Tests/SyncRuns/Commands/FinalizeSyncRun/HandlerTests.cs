@@ -31,7 +31,7 @@ namespace Synchronization.Application.Tests.Tests.SyncRuns.Commands.FinalizeSync
         }
 
         [Fact]
-        public void Cannot_be_finalized_by_other_identity()
+        public async Task Cannot_be_finalized_by_other_identity()
         {
             // Arrange
             var syncRun = SyncRunBuilder
@@ -47,11 +47,11 @@ namespace Synchronization.Application.Tests.Tests.SyncRuns.Commands.FinalizeSync
             Func<Task> acting = async () => await handler.Handle(new FinalizeExternalEventSyncSyncRunCommand(syncRun.Id), CancellationToken.None);
 
             // Assert
-            acting.Should().Throw<NotFoundException>().WithMessage("*SyncRun*");
+            await acting.Should().ThrowAsync<NotFoundException>().WithMessage("*SyncRun*");
         }
 
         [Fact]
-        public void Cannot_finalize_when_no_active_sync_run_exists()
+        public async Task Cannot_finalize_when_no_active_sync_run_exists()
         {
             // Arrange
             var syncRun = SyncRunBuilder
@@ -68,7 +68,7 @@ namespace Synchronization.Application.Tests.Tests.SyncRuns.Commands.FinalizeSync
             Func<Task> acting = async () => await handler.Handle(new FinalizeExternalEventSyncSyncRunCommand(syncRun.Id), CancellationToken.None);
 
             // Assert
-            acting.Should().Throw<OperationFailedException>().WithErrorCode("error.platform.validation.syncRun.syncRunAlreadyFinalized");
+            await acting.Should().ThrowAsync<OperationFailedException>().WithErrorCode("error.platform.validation.syncRun.syncRunAlreadyFinalized");
         }
 
         [Fact]
@@ -222,7 +222,7 @@ namespace Synchronization.Application.Tests.Tests.SyncRuns.Commands.FinalizeSync
         }
 
         [Fact]
-        public void Sync_run_can_only_be_finalized_by_creator_device()
+        public async Task Sync_run_can_only_be_finalized_by_creator_device()
         {
             // Arrange
             var syncRun = SyncRunBuilder
@@ -239,7 +239,7 @@ namespace Synchronization.Application.Tests.Tests.SyncRuns.Commands.FinalizeSync
             Func<Task> acting = async () => await handler.Handle(new FinalizeExternalEventSyncSyncRunCommand(syncRun.Id), CancellationToken.None);
 
             // Assert
-            acting.Should().Throw<OperationFailedException>().WithErrorCode("error.platform.validation.syncRun.cannotFinalizeSyncRunStartedByAnotherDevice");
+            await acting.Should().ThrowAsync<OperationFailedException>().WithErrorCode("error.platform.validation.syncRun.cannotFinalizeSyncRunStartedByAnotherDevice");
         }
 
         #region CreateHandler

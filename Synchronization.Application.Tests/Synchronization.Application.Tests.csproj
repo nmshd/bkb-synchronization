@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -11,9 +11,8 @@
     </PackageReference>
     <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
     <PackageReference Include="FakeItEasy" Version="7.2.0" />
-    <PackageReference Include="JUnitTestLogger" Version="1.1.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
-    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="FluentAssertions" Version="6.2.0" />
     <PackageReference Include="xunit" Version="2.4.1">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
@@ -21,7 +20,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Enmeshed.UnitTestTools" Version="1.0.1" />
+    <PackageReference Include="Enmeshed.UnitTestTools" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>

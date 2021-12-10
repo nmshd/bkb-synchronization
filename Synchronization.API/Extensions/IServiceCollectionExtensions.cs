@@ -62,8 +62,7 @@ namespace Synchronization.API.Extensions
                     }
 
                     options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                });
 
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>

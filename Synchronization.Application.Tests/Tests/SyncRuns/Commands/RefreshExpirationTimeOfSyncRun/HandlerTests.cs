@@ -17,7 +17,7 @@ namespace Synchronization.Application.Tests.Tests.SyncRuns.Commands.RefreshExpir
     public class HandlerTests : RequestHandlerTestsBase<ApplicationDbContext>
     {
         [Fact]
-        public void Cannot_refresh_expiration_time_of_sync_run_created_by_other_device()
+        public async Task Cannot_refresh_expiration_time_of_sync_run_created_by_other_device()
         {
             // Arrange
             var activeIdentity = TestDataGenerator.CreateRandomIdentityAddress();
@@ -33,11 +33,11 @@ namespace Synchronization.Application.Tests.Tests.SyncRuns.Commands.RefreshExpir
 
 
             // Assert
-            acting.Should().Throw<OperationFailedException>().WithErrorCode("error.platform.validation.syncRun.cannotRefreshExpirationTimeOfSyncRunStartedByAnotherDevice");
+            await acting.Should().ThrowAsync<OperationFailedException>().WithErrorCode("error.platform.validation.syncRun.cannotRefreshExpirationTimeOfSyncRunStartedByAnotherDevice");
         }
 
         [Fact]
-        public void Cannot_refresh_expiration_time_of_sync_run_created_by_other_identity()
+        public async Task Cannot_refresh_expiration_time_of_sync_run_created_by_other_identity()
         {
             // Arrange
             var activeIdentity = TestDataGenerator.CreateRandomIdentityAddress();
@@ -53,7 +53,7 @@ namespace Synchronization.Application.Tests.Tests.SyncRuns.Commands.RefreshExpir
 
 
             // Assert
-            acting.Should().Throw<NotFoundException>().WithMessage("*SyncRun*");
+            await acting.Should().ThrowAsync<NotFoundException>().WithMessage("*SyncRun*");
         }
 
         [Fact]
