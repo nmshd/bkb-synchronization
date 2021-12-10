@@ -9,68 +9,67 @@ using Synchronization.Application.Extensions;
 using Synchronization.Infrastructure.EventBus;
 using Synchronization.Infrastructure.Persistence;
 
-namespace Synchronization.API
+namespace Synchronization.API;
+
+public class Startup
 {
-    public class Startup
+    private readonly IConfiguration _configuration;
+    private readonly IWebHostEnvironment _env;
+
+    public Startup(IWebHostEnvironment env, IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration;
-        private readonly IWebHostEnvironment _env;
+        _env = env;
+        _configuration = configuration;
+    }
 
-        public Startup(IWebHostEnvironment env, IConfiguration configuration)
+    public IServiceProvider ConfigureServices(IServiceCollection services)
+    {
+        services.Configure<ApplicationOptions>(_configuration.GetSection("ApplicationOptions"));
+
+        services.AddCustomAspNetCore(_configuration, _env, options =>
         {
-            _env = env;
-            _configuration = configuration;
-        }
+            options.Authentication.Audience = "synchronization";
+            options.Authentication.Authority = _configuration.GetAuthorizationConfiguration().Authority;
+            options.Authentication.ValidIssuer = _configuration.GetAuthorizationConfiguration().ValidIssuer;
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+            options.Cors.AllowedOrigins = _configuration.GetCorsConfiguration().AllowedOrigins;
+            options.Cors.ExposedHeaders = _configuration.GetCorsConfiguration().ExposedHeaders;
+
+            options.HealthChecks.SqlConnectionString = _configuration.GetSqlDatabaseConfiguration().ConnectionString;
+
+            options.Json.Converters.Add(new DatawalletModificationIdJsonConverter());
+            options.Json.Converters.Add(new SyncRunIdJsonConverter());
+            options.Json.Converters.Add(new SyncErrorIdJsonConverter());
+            options.Json.Converters.Add(new ExternalEventIdJsonConverter());
+            options.Json.Converters.Add(new JsonStringEnumConverter());
+        });
+
+        services.AddCustomApplicationInsights();
+
+        services.AddCustomFluentValidation(_ => { });
+
+        services.AddPersistence(options =>
         {
-            services.Configure<ApplicationOptions>(_configuration.GetSection("ApplicationOptions"));
+            options.DbOptions.DbConnectionString = _configuration.GetSqlDatabaseConfiguration().ConnectionString;
 
-            services.AddCustomAspNetCore(_configuration, _env, options =>
-            {
-                options.Authentication.Audience = "synchronization";
-                options.Authentication.Authority = _configuration.GetAuthorizationConfiguration().Authority;
-                options.Authentication.ValidIssuer = _configuration.GetAuthorizationConfiguration().ValidIssuer;
+            options.BlobStorageOptions.ConnectionString = _configuration.GetBlobStorageConfiguration().ConnectionString;
+            options.BlobStorageOptions.ContainerName = "synchronization";
+        });
 
-                options.Cors.AllowedOrigins = _configuration.GetCorsConfiguration().AllowedOrigins;
-                options.Cors.ExposedHeaders = _configuration.GetCorsConfiguration().ExposedHeaders;
+        services.AddEventBus(_configuration.GetEventBusConfiguration());
 
-                options.HealthChecks.SqlConnectionString = _configuration.GetSqlDatabaseConfiguration().ConnectionString;
+        services.AddApplication();
 
-                options.Json.Converters.Add(new DatawalletModificationIdJsonConverter());
-                options.Json.Converters.Add(new SyncRunIdJsonConverter());
-                options.Json.Converters.Add(new SyncErrorIdJsonConverter());
-                options.Json.Converters.Add(new ExternalEventIdJsonConverter());
-                options.Json.Converters.Add(new JsonStringEnumConverter());
-            });
+        return services.ToAutofacServiceProvider();
+    }
 
-            services.AddCustomApplicationInsights();
+    public void Configure(IApplicationBuilder app, TelemetryConfiguration telemetryConfiguration)
+    {
+        telemetryConfiguration.DisableTelemetry = !_configuration.GetApplicationInsightsConfiguration().Enabled;
 
-            services.AddCustomFluentValidation(_ => { });
+        var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+        eventBus.AddApplicationSubscriptions();
 
-            services.AddPersistence(options =>
-            {
-                options.DbOptions.DbConnectionString = _configuration.GetSqlDatabaseConfiguration().ConnectionString;
-
-                options.BlobStorageOptions.ConnectionString = _configuration.GetBlobStorageConfiguration().ConnectionString;
-                options.BlobStorageOptions.ContainerName = "synchronization";
-            });
-
-            services.AddEventBus(_configuration.GetEventBusConfiguration());
-
-            services.AddApplication();
-
-            return services.ToAutofacServiceProvider();
-        }
-
-        public void Configure(IApplicationBuilder app, TelemetryConfiguration telemetryConfiguration)
-        {
-            telemetryConfiguration.DisableTelemetry = !_configuration.GetApplicationInsightsConfiguration().Enabled;
-
-            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.AddApplicationSubscriptions();
-
-            app.ConfigureMiddleware(_env);
-        }
+        app.ConfigureMiddleware(_env);
     }
 }

@@ -1,10 +1,9 @@
-﻿namespace Synchronization.API.Extensions
+﻿namespace Synchronization.API.Extensions;
+
+public static class IHostEnvironmentExtensions
 {
-    public static class IHostEnvironmentExtensions
+    public static bool IsLocal(this IHostEnvironment env)
     {
-        public static bool IsLocal(this IHostEnvironment env)
-        {
-            return env.EnvironmentName == "Local";
-        }
+        return env.EnvironmentName == "Local";
     }
 }

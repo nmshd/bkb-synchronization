@@ -2,22 +2,21 @@
 using FluentValidation;
 using Synchronization.Application.Datawallets.DTOs;
 
-namespace Synchronization.Application.SyncRuns.Commands.FinalizeSyncRun
-{
-    public class FinalizeExternalEventSyncSyncRunCommandValidator : AbstractValidator<FinalizeExternalEventSyncSyncRunCommand>
-    {
-        public FinalizeExternalEventSyncSyncRunCommandValidator()
-        {
-            RuleForEach(x => x.ExternalEventResults).SetValidator(new EventResultValidator());
-            RuleForEach(x => x.DatawalletModifications).SetValidator(new PushDatawalletModificationItemValidator());
-        }
+namespace Synchronization.Application.SyncRuns.Commands.FinalizeSyncRun;
 
-        public class EventResultValidator : AbstractValidator<FinalizeExternalEventSyncSyncRunCommand.ExternalEventResult>
+public class FinalizeExternalEventSyncSyncRunCommandValidator : AbstractValidator<FinalizeExternalEventSyncSyncRunCommand>
+{
+    public FinalizeExternalEventSyncSyncRunCommandValidator()
+    {
+        RuleForEach(x => x.ExternalEventResults).SetValidator(new EventResultValidator());
+        RuleForEach(x => x.DatawalletModifications).SetValidator(new PushDatawalletModificationItemValidator());
+    }
+
+    public class EventResultValidator : AbstractValidator<FinalizeExternalEventSyncSyncRunCommand.ExternalEventResult>
+    {
+        public EventResultValidator()
         {
-            public EventResultValidator()
-            {
-                RuleFor(i => i.ExternalEventId).DetailedNotEmpty();
-            }
+            RuleFor(i => i.ExternalEventId).DetailedNotEmpty();
         }
     }
 }

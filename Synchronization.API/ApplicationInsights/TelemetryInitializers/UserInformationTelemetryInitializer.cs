@@ -3,27 +3,26 @@ using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 
-namespace Synchronization.API.ApplicationInsights.TelemetryInitializers
+namespace Synchronization.API.ApplicationInsights.TelemetryInitializers;
+
+public class UserInformationTelemetryInitializer : ITelemetryInitializer
 {
-    public class UserInformationTelemetryInitializer : ITelemetryInitializer
+    private readonly IUserContext _userContext;
+
+    public UserInformationTelemetryInitializer(IUserContext userContext)
     {
-        private readonly IUserContext _userContext;
+        _userContext = userContext;
+    }
 
-        public UserInformationTelemetryInitializer(IUserContext userContext)
-        {
-            _userContext = userContext;
-        }
+    public void Initialize(ITelemetry telemetry)
+    {
+        if (!(telemetry is RequestTelemetry requestTelemetry))
+            return;
 
-        public void Initialize(ITelemetry telemetry)
-        {
-            if (!(telemetry is RequestTelemetry requestTelemetry))
-                return;
+        var address = _userContext.GetAddressOrNull() ?? "";
+        var deviceId = _userContext.GetDeviceIdOrNull() ?? "";
 
-            var address = _userContext.GetAddressOrNull() ?? "";
-            var deviceId = _userContext.GetDeviceIdOrNull() ?? "";
-
-            requestTelemetry.Properties.Add("Address", address);
-            requestTelemetry.Properties.Add("DeviceId", deviceId);
-        }
+        requestTelemetry.Properties.Add("Address", address);
+        requestTelemetry.Properties.Add("DeviceId", deviceId);
     }
 }

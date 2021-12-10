@@ -9,63 +9,62 @@ using Synchronization.Application.AutoMapper;
 using Synchronization.Application.Datawallets.Commands.PushDatawalletModifications;
 using ValidationException = Enmeshed.BuildingBlocks.Application.Abstractions.Exceptions.ValidationException;
 
-namespace Synchronization.Application.Extensions
+namespace Synchronization.Application.Extensions;
+
+public static class IServiceCollectionExtensions
 {
-    public static class IServiceCollectionExtensions
+    public static void AddApplication(this IServiceCollection services)
     {
-        public static void AddApplication(this IServiceCollection services)
-        {
-            services.AddMediatR(Assembly.GetExecutingAssembly());
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
-            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-            services.AddValidatorsFromAssembly(typeof(PushDatawalletModificationsCommand).Assembly);
-            services.AddEventHandlers();
-        }
+        services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+        services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+        services.AddValidatorsFromAssembly(typeof(PushDatawalletModificationsCommand).Assembly);
+        services.AddEventHandlers();
+    }
 
-        private static void AddEventHandlers(this IServiceCollection services)
+    private static void AddEventHandlers(this IServiceCollection services)
+    {
+        foreach (var eventHandler in GetAllIntegrationEventHandlers())
         {
-            foreach (var eventHandler in GetAllIntegrationEventHandlers())
-            {
-                services.AddTransient(eventHandler);
-            }
-        }
-
-        private static IEnumerable<Type> GetAllIntegrationEventHandlers()
-        {
-            var integrationEventHandlerTypes = from t in Assembly.GetExecutingAssembly().GetTypes()
-                from i in t.GetInterfaces()
-                where t.IsClass && !t.IsAbstract && i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)
-                select t;
-
-            return integrationEventHandlerTypes;
+            services.AddTransient(eventHandler);
         }
     }
 
-    public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+    private static IEnumerable<Type> GetAllIntegrationEventHandlers()
     {
-        private readonly IEnumerable<IValidator<TRequest>> _validators;
+        var integrationEventHandlerTypes = from t in Assembly.GetExecutingAssembly().GetTypes()
+            from i in t.GetInterfaces()
+            where t.IsClass && !t.IsAbstract && i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)
+            select t;
 
-        public RequestValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
-        {
-            _validators = validators;
-        }
+        return integrationEventHandlerTypes;
+    }
+}
 
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-        {
-            var context = new ValidationContext<TRequest>(request);
+public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
+{
+    private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-            var failures = _validators
-                .Select(v => v.Validate(context))
-                .SelectMany(result => result.Errors)
-                .Where(f => f != null)
-                .ToList();
+    public RequestValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
+    {
+        _validators = validators;
+    }
 
-            if (failures.Count != 0)
-                throw new ValidationException(new ApplicationError(failures.First().ErrorCode, failures.First().ErrorMessage));
+    public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    {
+        var context = new ValidationContext<TRequest>(request);
 
-            return next();
-        }
+        var failures = _validators
+            .Select(v => v.Validate(context))
+            .SelectMany(result => result.Errors)
+            .Where(f => f != null)
+            .ToList();
+
+        if (failures.Count != 0)
+            throw new ValidationException(new ApplicationError(failures.First().ErrorCode, failures.First().ErrorMessage));
+
+        return next();
     }
 }
