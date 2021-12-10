@@ -2,72 +2,65 @@
 using Enmeshed.BuildingBlocks.API.Extensions;
 using Enmeshed.Tooling.Extensions;
 using Microsoft.AspNetCore;
+using Synchronization.API;
 using Synchronization.API.Extensions;
 using Synchronization.Domain.Entities;
 using Synchronization.Infrastructure.Persistence.Database;
 
-namespace Synchronization.API;
+CreateWebHostBuilder(args).Build()
+    .MigrateDbContext<ApplicationDbContext>((dbContext, _) =>
+    {
+        CreateDatawalletsForIdentitiesWithoutDatawallet(dbContext);
 
-public class Program
+        dbContext.SaveChanges();
+    })
+    .Run();
+
+
+static void CreateDatawalletsForIdentitiesWithoutDatawallet(ApplicationDbContext dbContext)
 {
-    public static void Main(string[] args)
+    var modificationsWithoutDatawallet = dbContext.DatawalletModifications.Where(m => m.Datawallet == null).ToList();
+
+    foreach (var modificationsByOwner in modificationsWithoutDatawallet.GroupBy(m => m.CreatedBy))
     {
-        var host = CreateWebHostBuilder(args).Build()
-            .MigrateDbContext<ApplicationDbContext>((dbContext, _) =>
-            {
-                CreateDatawalletsForIdentitiesWithoutDatawallet(dbContext);
+        var datawallet = new Datawallet(new Datawallet.DatawalletVersion(0), modificationsByOwner.Key);
 
-                dbContext.SaveChanges();
-            });
-
-        host.Run();
-    }
-
-    private static void CreateDatawalletsForIdentitiesWithoutDatawallet(ApplicationDbContext dbContext)
-    {
-        var modificationsWithoutDatawallet = dbContext.DatawalletModifications.Where(m => m.Datawallet == null).ToList();
-
-        foreach (var modificationsByOwner in modificationsWithoutDatawallet.GroupBy(m => m.CreatedBy))
+        foreach (var modification in modificationsByOwner)
         {
-            var datawallet = new Datawallet(new Datawallet.DatawalletVersion(0), modificationsByOwner.Key);
-
-            foreach (var modification in modificationsByOwner)
-            {
-                datawallet.AddModification(modification);
-            }
-
-            dbContext.Datawallets.Add(datawallet);
+            datawallet.AddModification(modification);
         }
+
+        dbContext.Datawallets.Add(datawallet);
     }
+}
 
-    private static IWebHostBuilder CreateWebHostBuilder(string[] args)
-    {
-        return WebHost.CreateDefaultBuilder(args)
-            .UseKestrel(options =>
-            {
-                options.AddServerHeader = false;
-                options.Limits.MaxRequestBodySize = 128.Kibibytes();
-            })
-            .ConfigureAppConfiguration(AddAzureAppConfiguration)
-            .UseStartup<Startup>();
-    }
+static IWebHostBuilder CreateWebHostBuilder(string[] args)
+{
+    return WebHost.CreateDefaultBuilder(args)
+        .UseKestrel(options =>
+        {
+            options.AddServerHeader = false;
+            options.Limits.MaxRequestBodySize = 128.Kibibytes();
+        })
+        .ConfigureAppConfiguration(AddAzureAppConfiguration)
+        .UseStartup<Startup>();
+}
 
-    private static void AddAzureAppConfiguration(WebHostBuilderContext hostingContext, IConfigurationBuilder builder)
-    {
-        var configuration = builder.Build();
+static void AddAzureAppConfiguration(WebHostBuilderContext hostingContext, IConfigurationBuilder builder)
+{
+    var configuration = builder.Build();
 
-        var azureAppConfigurationConfiguration = configuration.GetAzureAppConfigurationConfiguration();
+    var azureAppConfigurationConfiguration = configuration.GetAzureAppConfigurationConfiguration();
 
-        if (azureAppConfigurationConfiguration.Enabled)
-            builder.AddAzureAppConfiguration(appConfigurationOptions =>
-            {
-                var credentials = new ManagedIdentityCredential();
+    if (azureAppConfigurationConfiguration.Enabled)
+        builder.AddAzureAppConfiguration(appConfigurationOptions =>
+        {
+            var credentials = new ManagedIdentityCredential();
 
-                appConfigurationOptions
-                    .Connect(new Uri(azureAppConfigurationConfiguration.Endpoint), credentials)
-                    .ConfigureKeyVault(vaultOptions => { vaultOptions.SetCredential(credentials); })
-                    .Select("*", null)
-                    .Select("*", "Synchronization");
-            });
-    }
+            appConfigurationOptions
+                .Connect(new Uri(azureAppConfigurationConfiguration.Endpoint), credentials)
+                .ConfigureKeyVault(vaultOptions => { vaultOptions.SetCredential(credentials); })
+                .Select("*", null)
+                .Select("*", "Synchronization");
+        });
 }
