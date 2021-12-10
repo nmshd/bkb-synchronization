@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Synchronization.Domain
+﻿namespace Synchronization.Domain
 {
     [Serializable]
     public abstract class SimpleValueObject<T> : ValueObject

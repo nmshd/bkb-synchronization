@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Synchronization.Application.SyncRuns.Commands.RefreshExpirationTimeOfSyncRun
+﻿namespace Synchronization.Application.SyncRuns.Commands.RefreshExpirationTimeOfSyncRun
 {
     public class RefreshExpirationTimeOfSyncRunResponse
     {

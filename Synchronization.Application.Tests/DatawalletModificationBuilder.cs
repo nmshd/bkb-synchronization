@@ -1,5 +1,4 @@
-﻿using System;
-using Enmeshed.DevelopmentKit.Identity.ValueObjects;
+﻿using Enmeshed.DevelopmentKit.Identity.ValueObjects;
 using Synchronization.Domain.Entities;
 using static Synchronization.Domain.Entities.Datawallet;
 

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Enmeshed.DevelopmentKit.Identity.ValueObjects;
+﻿using Enmeshed.DevelopmentKit.Identity.ValueObjects;
 using Synchronization.Domain.Entities.Sync;
 
 namespace Synchronization.Application.Extensions

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.EventBus;
+﻿using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.EventBus;
 using Enmeshed.DevelopmentKit.Identity.ValueObjects;
 using Microsoft.Extensions.Logging;
 using Synchronization.Application.IntegrationEvents.Outgoing;

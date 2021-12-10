@@ -1,5 +1,4 @@
-﻿using System;
-using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.Mapping;
+﻿using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.Mapping;
 using Synchronization.Domain.Entities;
 
 namespace Synchronization.Application.Datawallets.DTOs

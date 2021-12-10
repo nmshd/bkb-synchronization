@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Synchronization.Application.Datawallets.DTOs;
+﻿using Synchronization.Application.Datawallets.DTOs;
 
 namespace Synchronization.Application.SyncRuns.Commands.FinalizeSyncRun
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using Enmeshed.DevelopmentKit.Identity.ValueObjects;
+﻿using Enmeshed.DevelopmentKit.Identity.ValueObjects;
 using Enmeshed.Tooling;
 
 namespace Synchronization.Domain.Entities

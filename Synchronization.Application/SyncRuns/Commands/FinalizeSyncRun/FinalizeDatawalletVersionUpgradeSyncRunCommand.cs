@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using MediatR;
 using Synchronization.Application.Datawallets.DTOs;
 using Synchronization.Domain.Entities.Sync;

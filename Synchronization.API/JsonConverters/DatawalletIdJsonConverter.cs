@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Enmeshed.StronglyTypedIds;
 using Synchronization.Domain.Entities;

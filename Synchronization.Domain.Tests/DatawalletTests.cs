@@ -1,4 +1,3 @@
-using System;
 using FluentAssertions;
 using Synchronization.Domain.Entities;
 using Xunit;

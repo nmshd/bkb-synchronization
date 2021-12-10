@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Synchronization.Infrastructure.Persistence.Database;
 
 namespace Synchronization.Infrastructure.Persistence

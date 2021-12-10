@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Enmeshed.BuildingBlocks.Application.Pagination;
+﻿using Enmeshed.BuildingBlocks.Application.Pagination;
 using Synchronization.Application.Datawallets.DTOs;
 
 namespace Synchronization.Application.Datawallets.Queries.GetModifications

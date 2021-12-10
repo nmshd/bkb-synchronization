@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Synchronization.Domain
+﻿namespace Synchronization.Domain
 {
     [Serializable]
     public abstract class ValueObject : IComparable, IComparable<ValueObject>

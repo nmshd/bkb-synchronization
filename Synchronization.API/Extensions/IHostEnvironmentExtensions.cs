@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-
-namespace Synchronization.API.Extensions
+﻿namespace Synchronization.API.Extensions
 {
     public static class IHostEnvironmentExtensions
     {

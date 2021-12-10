@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Enmeshed.DevelopmentKit.Identity.ValueObjects;
+﻿using Enmeshed.DevelopmentKit.Identity.ValueObjects;
 using Enmeshed.Tooling;
 
 namespace Synchronization.Domain.Entities.Sync

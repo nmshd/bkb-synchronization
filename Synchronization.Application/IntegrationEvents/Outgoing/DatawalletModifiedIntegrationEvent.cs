@@ -1,5 +1,4 @@
-﻿using System;
-using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.EventBus.Events;
+﻿using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.EventBus.Events;
 using Enmeshed.DevelopmentKit.Identity.ValueObjects;
 
 namespace Synchronization.Application.IntegrationEvents.Outgoing
