@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace Synchronization.Application.SyncRuns.Commands.RefreshExpirationTimeOfSyncRun;
 
-namespace Synchronization.Application.SyncRuns.Commands.RefreshExpirationTimeOfSyncRun
+public class RefreshExpirationTimeOfSyncRunResponse
 {
-    public class RefreshExpirationTimeOfSyncRunResponse
-    {
-        public DateTime ExpiresAt { get; set; }
-    }
+    public DateTime ExpiresAt { get; set; }
 }

@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using Synchronization.Application.Datawallets.DTOs;
+﻿using Synchronization.Application.Datawallets.DTOs;
 
-namespace Synchronization.Application.SyncRuns.Commands.FinalizeSyncRun
+namespace Synchronization.Application.SyncRuns.Commands.FinalizeSyncRun;
+
+public class FinalizeExternalEventSyncSyncRunResponse
 {
-    public class FinalizeExternalEventSyncSyncRunResponse
-    {
-        public long? NewDatawalletModificationIndex { get; set; }
+    public long? NewDatawalletModificationIndex { get; set; }
 
-        public IEnumerable<CreatedDatawalletModificationDTO> DatawalletModifications { get; set; }
-    }
+    public IEnumerable<CreatedDatawalletModificationDTO> DatawalletModifications { get; set; }
 }

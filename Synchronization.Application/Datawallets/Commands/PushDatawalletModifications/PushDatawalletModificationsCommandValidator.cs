@@ -2,14 +2,14 @@
 using FluentValidation;
 using Synchronization.Application.Datawallets.DTOs;
 
-namespace Synchronization.Application.Datawallets.Commands.PushDatawalletModifications
+namespace Synchronization.Application.Datawallets.Commands.PushDatawalletModifications;
+
+// ReSharper disable once UnusedMember.Global
+public class PushDatawalletModificationsCommandValidator : AbstractValidator<PushDatawalletModificationsCommand>
 {
-    public class PushDatawalletModificationsCommandValidator : AbstractValidator<PushDatawalletModificationsCommand>
+    public PushDatawalletModificationsCommandValidator()
     {
-        public PushDatawalletModificationsCommandValidator()
-        {
-            RuleFor(r => r.Modifications).DetailedNotEmpty();
-            RuleForEach(r => r.Modifications).SetValidator(new PushDatawalletModificationItemValidator());
-        }
+        RuleFor(r => r.Modifications).DetailedNotEmpty();
+        RuleForEach(r => r.Modifications).SetValidator(new PushDatawalletModificationItemValidator());
     }
 }

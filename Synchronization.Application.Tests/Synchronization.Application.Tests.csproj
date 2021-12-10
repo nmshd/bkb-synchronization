@@ -1,34 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoFixture" Version="4.17.0">
-      <TreatAsUsed>true</TreatAsUsed>
-    </PackageReference>
-    <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
-    <PackageReference Include="FakeItEasy" Version="7.2.0" />
-    <PackageReference Include="JUnitTestLogger" Version="1.1.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
-    <PackageReference Include="FluentAssertions" Version="5.10.3" />
-    <PackageReference Include="xunit" Version="2.4.1">
-      <TreatAsUsed>true</TreatAsUsed>
-    </PackageReference>
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Enmeshed.UnitTestTools" Version="1.0.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoFixture" Version="4.17.0">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
+		<PackageReference Include="FakeItEasy" Version="7.2.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+		<PackageReference Include="FluentAssertions" Version="6.2.0" />
+		<PackageReference Include="xunit" Version="2.4.1">
+			<TreatAsUsed>true</TreatAsUsed>
+		</PackageReference>
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Enmeshed.UnitTestTools" Version="1.0.3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Synchronization.Application\Synchronization.Application.csproj">
-      <TreatAsUsed>true</TreatAsUsed>
-    </ProjectReference>
-    <ProjectReference Include="..\Synchronization.Infrastructure\Synchronization.Infrastructure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Synchronization.Application\Synchronization.Application.csproj">
+			<TreatAsUsed>true</TreatAsUsed>
+		</ProjectReference>
+		<ProjectReference Include="..\Synchronization.Infrastructure\Synchronization.Infrastructure.csproj" />
+	</ItemGroup>
 
 </Project>

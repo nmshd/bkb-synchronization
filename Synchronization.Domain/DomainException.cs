@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace Synchronization.Domain;
 
-namespace Synchronization.Domain
+public class DomainException : Exception
 {
-    public class DomainException : Exception
-    {
-        public DomainException(string? message) : base(message) { }
-    }
+    public DomainException(string? message) : base(message) { }
 }
