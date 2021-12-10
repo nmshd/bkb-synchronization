@@ -11,7 +11,7 @@ public class DatawalletTests
     {
         var datawallet = CreateDatawallet(new Datawallet.DatawalletVersion(2));
 
-        Action acting = () => datawallet.Upgrade(new Datawallet.DatawalletVersion(1));
+        var acting = () => datawallet.Upgrade(new Datawallet.DatawalletVersion(1));
 
         acting.Should().Throw<DomainException>().WithMessage("*it is not possible to upgrade to lower versions*");
     }
