@@ -16,7 +16,7 @@ public class UserInformationTelemetryInitializer : ITelemetryInitializer
 
     public void Initialize(ITelemetry telemetry)
     {
-        if (!(telemetry is RequestTelemetry requestTelemetry))
+        if (telemetry is not RequestTelemetry requestTelemetry)
             return;
 
         var address = _userContext.GetAddressOrNull() ?? "";

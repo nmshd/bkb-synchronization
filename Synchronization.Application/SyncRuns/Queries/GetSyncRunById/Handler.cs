@@ -8,7 +8,6 @@ namespace Synchronization.Application.SyncRuns.Queries.GetSyncRunById;
 
 public class Handler : IRequestHandler<GetSyncRunByIdQuery, SyncRunDTO>
 {
-    private readonly DeviceId _activeDevice;
     private readonly IdentityAddress _activeIdentity;
     private readonly ISynchronizationDbContext _dbContext;
     private readonly IMapper _mapper;
@@ -18,7 +17,7 @@ public class Handler : IRequestHandler<GetSyncRunByIdQuery, SyncRunDTO>
         _dbContext = dbContext;
         _mapper = mapper;
         _activeIdentity = userContext.GetAddress();
-        _activeDevice = userContext.GetDeviceId();
+        userContext.GetDeviceId();
     }
 
     public async Task<SyncRunDTO> Handle(GetSyncRunByIdQuery request, CancellationToken cancellationToken)

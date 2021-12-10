@@ -21,14 +21,7 @@ public abstract class ValueObject : IComparable, IComparable<ValueObject>
         var components = GetEqualityComponents().ToArray();
         var otherComponents = other.GetEqualityComponents().ToArray();
 
-        for (var i = 0; i < components.Length; i++)
-        {
-            var comparison = CompareComponents(components[i], otherComponents[i]);
-            if (comparison != 0)
-                return comparison;
-        }
-
-        return 0;
+        return components.Select((t, i) => CompareComponents(t, otherComponents[i])).FirstOrDefault(comparison => comparison != 0);
     }
 
     public virtual int CompareTo(ValueObject? other)

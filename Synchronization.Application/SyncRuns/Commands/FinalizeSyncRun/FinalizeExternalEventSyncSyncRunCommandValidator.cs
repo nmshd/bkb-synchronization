@@ -4,6 +4,7 @@ using Synchronization.Application.Datawallets.DTOs;
 
 namespace Synchronization.Application.SyncRuns.Commands.FinalizeSyncRun;
 
+// ReSharper disable once UnusedMember.Global
 public class FinalizeExternalEventSyncSyncRunCommandValidator : AbstractValidator<FinalizeExternalEventSyncSyncRunCommand>
 {
     public FinalizeExternalEventSyncSyncRunCommandValidator()

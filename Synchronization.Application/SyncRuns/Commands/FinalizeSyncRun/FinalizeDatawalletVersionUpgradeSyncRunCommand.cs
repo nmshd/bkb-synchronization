@@ -5,7 +5,7 @@ using Synchronization.Domain.Entities.Sync;
 
 namespace Synchronization.Application.SyncRuns.Commands.FinalizeSyncRun;
 
-public class FinalizeDatawalletVersionUpgradeSyncRunCommand : IRequest<FinalizeDatawalletVersionUpgradeSyncRunResponse>, IRequest<FinalizeExternalEventSyncSyncRunResponse>
+public class FinalizeDatawalletVersionUpgradeSyncRunCommand : IRequest<FinalizeDatawalletVersionUpgradeSyncRunResponse>
 {
     [JsonConstructor]
     public FinalizeDatawalletVersionUpgradeSyncRunCommand(SyncRunId syncRunId, ushort newDatawalletVersion, List<PushDatawalletModificationItem> datawalletModifications)

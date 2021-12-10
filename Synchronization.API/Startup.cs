@@ -38,6 +38,7 @@ public class Startup
             options.HealthChecks.SqlConnectionString = _configuration.GetSqlDatabaseConfiguration().ConnectionString;
 
             options.Json.Converters.Add(new DatawalletModificationIdJsonConverter());
+            options.Json.Converters.Add(new DatawalletIdJsonConverter());
             options.Json.Converters.Add(new SyncRunIdJsonConverter());
             options.Json.Converters.Add(new SyncErrorIdJsonConverter());
             options.Json.Converters.Add(new ExternalEventIdJsonConverter());

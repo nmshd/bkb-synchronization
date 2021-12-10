@@ -12,9 +12,6 @@ public static class DatawalletModificationsQueryableExtensions
 
     public static IQueryable<DatawalletModification> WithIndexGreaterThan(this IQueryable<DatawalletModification> query, long? index)
     {
-        if (index == null)
-            return query;
-
-        return query.Where(e => e.Index > index);
+        return index == null ? query : query.Where(e => e.Index > index);
     }
 }

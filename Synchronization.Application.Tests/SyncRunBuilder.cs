@@ -6,7 +6,7 @@ namespace Synchronization.Application.Tests;
 public class SyncRunBuilder
 {
     private static int _currentIndex;
-    private readonly ushort _duration = 10;
+    private const ushort DURATION = 10;
     private IdentityAddress _createdBy;
     private DeviceId _createdByDevice;
     private DateTime? _expiresAt;
@@ -77,7 +77,7 @@ public class SyncRunBuilder
 
     public SyncRun Create()
     {
-        var syncRun = new SyncRun(_currentIndex++, _duration, _createdBy, _createdByDevice, _externalEvents, SyncRun.SyncRunType.ExternalEventSync);
+        var syncRun = new SyncRun(_currentIndex++, DURATION, _createdBy, _createdByDevice, _externalEvents, SyncRun.SyncRunType.ExternalEventSync);
 
         if (!_isRunning)
             syncRun.FinalizeExternalEventSync(Array.Empty<ExternalEventResult>());

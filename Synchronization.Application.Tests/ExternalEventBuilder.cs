@@ -67,9 +67,10 @@ public class ExternalEventBuilder
 
     public ExternalEvent Create()
     {
-        var externalEvent = new ExternalEvent(_type, _owner, _currentIndex++, _payload ?? new {someAribtraryProperty = "someArbitraryValue"});
-
-        externalEvent.SyncErrorCount = _errorCount;
+        var externalEvent = new ExternalEvent(_type, _owner, _currentIndex++, _payload ?? new {someAribtraryProperty = "someArbitraryValue"})
+        {
+            SyncErrorCount = _errorCount
+        };
 
         if (_syncRun != null)
             externalEvent.AssignToSyncRun(_syncRun);

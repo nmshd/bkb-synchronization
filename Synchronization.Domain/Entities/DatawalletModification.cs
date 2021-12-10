@@ -28,7 +28,7 @@ public class DatawalletModification
         CreatedByDevice = createdByDevice;
     }
 
-    public DatawalletModificationId? Id { get; }
+    public DatawalletModificationId Id { get; }
     public Datawallet? Datawallet { get; }
     public Datawallet.DatawalletVersion DatawalletVersion { get; }
     public long Index { get; }

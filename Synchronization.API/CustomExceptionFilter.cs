@@ -53,7 +53,7 @@ public class CustomExceptionFilter : ExceptionFilterAttribute
                     (int) GetStatusCodeForApplicationException(applicationException);
 
                 break;
-            case BadHttpRequestException _:
+            case BadHttpRequestException:
                 _logger.LogInformation(
                     $"{ERROR_CODE_REQUEST_BODY_TOO_LARGE}: The body of the request is too large.");
 
@@ -85,7 +85,7 @@ public class CustomExceptionFilter : ExceptionFilterAttribute
             });
     }
 
-    private HttpError CreateHttpErrorForDomainException(DomainException exception)
+    private static HttpError CreateHttpErrorForDomainException(DomainException exception)
     {
         var httpError = HttpError.ForProduction(
             ApplicationErrors.Generic.OperationFailed().Code,
@@ -96,7 +96,7 @@ public class CustomExceptionFilter : ExceptionFilterAttribute
         return httpError;
     }
 
-    private HttpError CreateHttpErrorApplicationException(ApplicationException applicationException)
+    private static HttpError CreateHttpErrorApplicationException(ApplicationException applicationException)
     {
         var httpError = HttpError.ForProduction(
             applicationException.Code,
@@ -107,12 +107,12 @@ public class CustomExceptionFilter : ExceptionFilterAttribute
         return httpError;
     }
 
-    private HttpStatusCode GetStatusCodeForApplicationException(ApplicationException exception)
+    private static HttpStatusCode GetStatusCodeForApplicationException(ApplicationException exception)
     {
         return exception switch
         {
-            NotFoundException _ => HttpStatusCode.NotFound,
-            ActionForbiddenException _ => HttpStatusCode.Forbidden,
+            NotFoundException => HttpStatusCode.NotFound,
+            ActionForbiddenException => HttpStatusCode.Forbidden,
             _ => HttpStatusCode.BadRequest
         };
     }
@@ -152,12 +152,8 @@ public class CustomExceptionFilter : ExceptionFilterAttribute
         return httpError;
     }
 
-    private IEnumerable<string> GetFormattedStackTrace(Exception exception)
+    private static IEnumerable<string> GetFormattedStackTrace(Exception exception)
     {
-        if (exception.StackTrace == null)
-            return Enumerable.Empty<string>();
-
-        return
-            Regex.Matches(exception.StackTrace, "at .+").Select(m => m.Value.Trim());
+        return exception.StackTrace == null ? Enumerable.Empty<string>() : Regex.Matches(exception.StackTrace, "at .+").Select(m => m.Value.Trim());
     }
 }
