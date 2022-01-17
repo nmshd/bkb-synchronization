@@ -376,14 +376,14 @@ public class HandlerTests
         result.Should().HaveCount(2);
     }
 
-    private static Datawallet CreateDatawalletForActiveIdentity(ushort version = DATAWALLET_VERSION)
+    private static Domain.Entities.Datawallet CreateDatawalletForActiveIdentity(ushort version = DATAWALLET_VERSION)
     {
-        return new Datawallet(new Datawallet.DatawalletVersion(version), ActiveIdentity);
+        return new Domain.Entities.Datawallet(new Domain.Entities.Datawallet.DatawalletVersion(version), ActiveIdentity);
     }
 
-    private static Datawallet CreateDatawalletFor(IdentityAddress owner)
+    private static Domain.Entities.Datawallet CreateDatawalletFor(IdentityAddress owner)
     {
-        return new Datawallet(new Datawallet.DatawalletVersion(1), owner);
+        return new Domain.Entities.Datawallet(new Domain.Entities.Datawallet.DatawalletVersion(1), owner);
     }
 
 

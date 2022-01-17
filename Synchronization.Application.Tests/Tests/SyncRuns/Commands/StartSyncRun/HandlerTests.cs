@@ -8,7 +8,6 @@ using FluentAssertions;
 using Synchronization.Application.AutoMapper;
 using Synchronization.Application.SyncRuns.Commands.StartSyncRun;
 using Synchronization.Application.SyncRuns.DTOs;
-using Synchronization.Domain.Entities;
 using Synchronization.Domain.Entities.Sync;
 using Synchronization.Infrastructure.Persistence.Database;
 using Xunit;
@@ -23,7 +22,7 @@ public class HandlerTests : RequestHandlerTestsBase<ApplicationDbContext>
     public HandlerTests()
     {
         _activeIdentity = TestDataGenerator.CreateRandomIdentityAddress();
-        _arrangeContext.SaveEntity(new Datawallet(new Datawallet.DatawalletVersion(DATAWALLET_VERSION), _activeIdentity));
+        _arrangeContext.SaveEntity(new Domain.Entities.Datawallet(new Domain.Entities.Datawallet.DatawalletVersion(DATAWALLET_VERSION), _activeIdentity));
     }
 
     [Fact]
