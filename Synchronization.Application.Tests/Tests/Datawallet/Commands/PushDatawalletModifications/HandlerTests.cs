@@ -29,7 +29,7 @@ namespace Synchronization.Application.Tests.Tests.Datawallet.Commands.PushDatawa
             connection.Open();
             _dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite(connection).Options;
 
-            var setupContext = new DbContextWithDelayedSave(_dbOptions);
+            var setupContext = new ApplicationDbContext(_dbOptions);
             setupContext.Database.EnsureCreated();
             setupContext.Dispose();
 
@@ -38,45 +38,54 @@ namespace Synchronization.Application.Tests.Tests.Datawallet.Commands.PushDatawa
         }
 
         [Fact]
-        public async Task Parallel_push_leads_to_an_error()
+        public async Task Parallel_push_leads_to_an_error_for_one_call()
         {
-            var arrangeContext = GetDbContext();
+            var arrangeContext = CreateDbContext();
+            arrangeContext.SaveEntity(new Domain.Entities.Datawallet(new Domain.Entities.Datawallet.DatawalletVersion(1), _activeIdentity));
 
             // By adding a save-delay to one of the calls, we can ensure that the second one will finish first, and therefore the first one
             // will definitely run into an error regarding the duplicate database index.
-            var actContextWithDelayedSave = GetDbContextWithDelayedSave();
-            var actContextWithImmediateSave = GetDbContext();
-
-            arrangeContext.SaveEntity(new Domain.Entities.Datawallet(new Domain.Entities.Datawallet.DatawalletVersion(1), _activeIdentity));
-
-            var handlerWithDelayedSave = CreateHandler(_activeIdentity, _activeDevice, actContextWithDelayedSave);
-            var handlerWithImmediateSave = CreateHandler(_activeIdentity, _activeDevice, actContextWithImmediateSave);
+            var handlerWithDelayedSave = CreateHandlerWithDelayedSave();
+            var handlerWithImmediateSave = CreateHandlerWithImmediateSave();
 
             var newModifications = _testDataGenerator.CreateMany<PushDatawalletModificationItem>(1).ToArray();
-            
+
 
             // Act
-            var parallelPush = () => Task.WhenAll(
-                handlerWithDelayedSave.Handle(new PushDatawalletModificationsCommand(newModifications, null, 1), CancellationToken.None),
-                handlerWithImmediateSave.Handle(new PushDatawalletModificationsCommand(newModifications, null, 1), CancellationToken.None)
-            );
+            var taskWithImmediateSave = handlerWithDelayedSave.Handle(new PushDatawalletModificationsCommand(newModifications, null, 1), CancellationToken.None);
+            var taskWithDelayedSave = handlerWithImmediateSave.Handle(new PushDatawalletModificationsCommand(newModifications, null, 1), CancellationToken.None);
+
+            var handleWithDelayedSave = () => taskWithImmediateSave;
+            var handleWithImmediateSave = () => taskWithDelayedSave;
 
 
             // Assert
-            await parallelPush
+            await handleWithImmediateSave.Should().NotThrowAsync();
+
+            await handleWithDelayedSave
                 .Should().ThrowAsync<OperationFailedException>()
                 .WithMessage("The sent localIndex does not match the index of the latest modification.*")
                 .WithErrorCode("error.platform.validation.datawallet.datawalletNotUpToDate");
         }
 
-        private DbContextWithDelayedSave GetDbContextWithDelayedSave()
+        private Handler CreateHandlerWithImmediateSave()
         {
-            return new DbContextWithDelayedSave(_dbOptions);
+            return CreateHandler(_activeIdentity, _activeDevice, CreateDbContext());
         }
 
-        private ApplicationDbContext GetDbContext()
+        private ApplicationDbContext CreateDbContext()
         {
             return new ApplicationDbContext(_dbOptions);
+        }
+
+        private Handler CreateHandlerWithDelayedSave()
+        {
+            return CreateHandler(_activeIdentity, _activeDevice, CreateDbContextWithDelayedSave());
+        }
+
+        private ApplicationDbContextWithDelayedSave CreateDbContextWithDelayedSave()
+        {
+            return new ApplicationDbContextWithDelayedSave(_dbOptions, TimeSpan.FromMilliseconds(200));
         }
 
         private static Handler CreateHandler(IdentityAddress activeIdentity, DeviceId activeDevice, ApplicationDbContext dbContext)
@@ -92,24 +101,6 @@ namespace Synchronization.Application.Tests.Tests.Datawallet.Commands.PushDatawa
             var eventBus = A.Fake<IEventBus>();
 
             return new Handler(dbContext, userContext, mapper, blobStorage, eventBus);
-        }
-    }
-
-    public class DbContextWithDelayedSave : ApplicationDbContext
-    {
-        private readonly int _delayInMilliseconds;
-
-        public DbContextWithDelayedSave(DbContextOptions<ApplicationDbContext> options, int delayInMilliseconds = 100) : base(options)
-        {
-            _delayInMilliseconds = delayInMilliseconds;
-        }
-
-
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
-        {
-            await Task.Delay(_delayInMilliseconds, cancellationToken);
-
-            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }

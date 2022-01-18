@@ -64,7 +64,7 @@ public class Handler : IRequestHandler<StartSyncRunCommand, StartSyncRunResponse
         if (IsPreviousSyncRunStillActive())
         {
             if (!_previousSyncRun.IsExpired)
-                throw new OperationFailedException(ApplicationErrors.SyncRuns.CannotStartSyncRunWhenAnotherSyncRunIsRunning());
+                throw new OperationFailedException(ApplicationErrors.SyncRuns.CannotStartSyncRunWhenAnotherSyncRunIsRunning(_previousSyncRun.Id));
 
             await CancelPreviousSyncRun();
         }
@@ -83,7 +83,7 @@ public class Handler : IRequestHandler<StartSyncRunCommand, StartSyncRunResponse
         }
         catch (DbUpdateException ex)
         {
-            if (ex.HResult == -2146233088 && ex.Message.Contains("IX_SyncRuns_CreatedBy_Index")) // Index already exists
+            if (ex.HasReason(DbUpdateExceptionReason.DuplicateIndex))
                 throw new OperationFailedException(ApplicationErrors.SyncRuns.CannotStartSyncRunWhenAnotherSyncRunIsRunning());
 
             throw;
@@ -115,7 +115,7 @@ public class Handler : IRequestHandler<StartSyncRunCommand, StartSyncRunResponse
         if (IsPreviousSyncRunStillActive())
         {
             if (!_previousSyncRun.IsExpired)
-                throw new OperationFailedException(ApplicationErrors.SyncRuns.CannotStartSyncRunWhenAnotherSyncRunIsRunning());
+                throw new OperationFailedException(ApplicationErrors.SyncRuns.CannotStartSyncRunWhenAnotherSyncRunIsRunning(_previousSyncRun.Id));
 
             await CancelPreviousSyncRun();
         }
@@ -129,7 +129,7 @@ public class Handler : IRequestHandler<StartSyncRunCommand, StartSyncRunResponse
         }
         catch (DbUpdateException ex)
         {
-            if (ex.HResult == -2146233088 && ex.Message.Contains("IX_SyncRuns_CreatedBy_Index")) // Index already exists
+            if (ex.HasReason(DbUpdateExceptionReason.DuplicateIndex))
                 throw new OperationFailedException(ApplicationErrors.SyncRuns.CannotStartSyncRunWhenAnotherSyncRunIsRunning());
 
             throw;
