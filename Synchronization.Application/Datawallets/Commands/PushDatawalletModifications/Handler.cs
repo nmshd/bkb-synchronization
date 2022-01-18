@@ -5,7 +5,9 @@ using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.Persistenc
 using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.UserContext;
 using Enmeshed.DevelopmentKit.Identity.ValueObjects;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Synchronization.Application.IntegrationEvents.Outgoing;
+using Synchronization.Application.SyncRuns.Commands.StartSyncRun;
 using Synchronization.Domain.Entities;
 using static Synchronization.Domain.Entities.Datawallet;
 
@@ -108,7 +110,7 @@ public class Handler : IRequestHandler<PushDatawalletModificationsCommand, PushD
         if (_datawallet.LatestModification != null && _datawallet.LatestModification.Index != _request.LocalIndex)
             throw new OperationFailedException(ApplicationErrors.Datawallet.DatawalletNotUpToDate(_request.LocalIndex, _datawallet.LatestModification.Index));
     }
-
+    
     private async Task Save(DatawalletModification[] modifications)
     {
         await _dbContext.Set<DatawalletModification>().AddRangeAsync(modifications, _cancellationToken);
@@ -119,7 +121,18 @@ public class Handler : IRequestHandler<PushDatawalletModificationsCommand, PushD
         }
 
         await _blobStorage.SaveAsync();
-        await _dbContext.SaveChangesAsync(_cancellationToken);
+
+        try
+        {
+            await _dbContext.SaveChangesAsync(_cancellationToken);
+        }
+        catch (DbUpdateException ex)
+        {
+            if (ex.HasReason(DbUpdateExceptionReason.DuplicateIndex))
+                throw new OperationFailedException(ApplicationErrors.Datawallet.DatawalletNotUpToDate());
+
+            throw;
+        }
     }
 
     private void PublishIntegrationEvent()
