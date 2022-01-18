@@ -39,12 +39,10 @@ public class HandlerTests
         var datawallet = CreateDatawalletForActiveIdentity();
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 0,
             Type = DatawalletModificationType.CacheChanged
         });
         var latestCacheChangedModification = datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 1,
             Type = DatawalletModificationType.CacheChanged
         });
         _arrangeContext.SaveEntity(datawallet);
@@ -64,12 +62,10 @@ public class HandlerTests
         var datawallet = CreateDatawalletForActiveIdentity();
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 0,
             Type = DatawalletModificationType.Update
         });
         var latestUpdateModification = datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 1,
             Type = DatawalletModificationType.Update
         });
         _arrangeContext.SaveEntity(datawallet);
@@ -89,12 +85,10 @@ public class HandlerTests
         var datawallet = CreateDatawalletForActiveIdentity();
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 0,
             Type = DatawalletModificationType.CacheChanged
         });
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 1,
             Type = DatawalletModificationType.Update
         });
         _arrangeContext.SaveEntity(datawallet);
@@ -113,13 +107,11 @@ public class HandlerTests
         var datawallet = CreateDatawalletForActiveIdentity();
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 0,
             Type = DatawalletModificationType.Update,
             ObjectIdentifier = "id1"
         });
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 1,
             Type = DatawalletModificationType.Update,
             ObjectIdentifier = "id2"
         });
@@ -139,13 +131,11 @@ public class HandlerTests
         var datawallet = CreateDatawalletForActiveIdentity();
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 0,
             Type = DatawalletModificationType.Update,
             PayloadCategory = "category1"
         });
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 1,
             Type = DatawalletModificationType.Update,
             PayloadCategory = "category2"
         });
@@ -183,85 +173,71 @@ public class HandlerTests
         var datawalletOfActiveIdentity = CreateDatawalletForActiveIdentity();
         var anotherIdentity = TestDataGenerator.CreateRandomIdentityAddress();
         var datawalletOfAnotherIdentity = CreateDatawalletFor(anotherIdentity);
-        var modificationOfAnotherIdentity = datawalletOfAnotherIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
-        {
-            Index = 0
-        });
+        var modificationOfAnotherIdentity = datawalletOfAnotherIdentity.AddModification(new DatawalletExtensions.AddModificationParameters());
 
         var indexOfActiveIdentity = 0;
 
         var createId1Category1 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = indexOfActiveIdentity++,
             Type = DatawalletModificationType.Create,
             ObjectIdentifier = "id1",
             PayloadCategory = "category1"
         });
         var createId1Category2 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = indexOfActiveIdentity++,
             Type = DatawalletModificationType.Create,
             ObjectIdentifier = "id1",
             PayloadCategory = "category2"
         });
         var createId2Category1 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = indexOfActiveIdentity++,
             Type = DatawalletModificationType.Create,
             ObjectIdentifier = "id2",
             PayloadCategory = "category1"
         });
         var createId2Category2 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = indexOfActiveIdentity++,
             Type = DatawalletModificationType.Create,
             ObjectIdentifier = "id2",
             PayloadCategory = "category2"
         });
         var firstUpdateId1Category1 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = indexOfActiveIdentity++,
             Type = DatawalletModificationType.Update,
             ObjectIdentifier = "id1",
             PayloadCategory = "category1"
         });
         var updateId1Category2 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = indexOfActiveIdentity++,
             Type = DatawalletModificationType.Update,
             ObjectIdentifier = "id1",
             PayloadCategory = "category2"
         });
         var updateId2Category2 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = indexOfActiveIdentity++,
             Type = DatawalletModificationType.Update,
             ObjectIdentifier = "id2",
             PayloadCategory = "category2"
         });
         var secondUpdateId1Category1 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = indexOfActiveIdentity++,
             Type = DatawalletModificationType.Update,
             ObjectIdentifier = "id1",
             PayloadCategory = "category1"
         });
         var deleteId2 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = indexOfActiveIdentity++,
             Type = DatawalletModificationType.Delete,
             ObjectIdentifier = "id2"
         });
         var lastUpdateId1Category1 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = indexOfActiveIdentity++,
             Type = DatawalletModificationType.Update,
             ObjectIdentifier = "id1",
             PayloadCategory = "category1"
         });
         var deleteId1 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = indexOfActiveIdentity,
             Type = DatawalletModificationType.Delete,
             ObjectIdentifier = "id1"
         });
@@ -296,12 +272,10 @@ public class HandlerTests
         var datawallet = CreateDatawalletForActiveIdentity();
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 0,
             ObjectIdentifier = "id1"
         });
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 1,
             ObjectIdentifier = "id2"
         });
         _arrangeContext.SaveEntity(datawallet);
@@ -320,17 +294,14 @@ public class HandlerTests
         var datawallet = CreateDatawalletForActiveIdentity();
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 0,
             ObjectIdentifier = "id1"
         });
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 1,
             ObjectIdentifier = "id2"
         });
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 2,
             ObjectIdentifier = "id3"
         });
         _arrangeContext.SaveEntity(datawallet);
@@ -362,12 +333,10 @@ public class HandlerTests
         var datawallet = CreateDatawalletForActiveIdentity();
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 0,
             ObjectIdentifier = "id1"
         });
         datawallet.AddModification(new DatawalletExtensions.AddModificationParameters
         {
-            Index = 1,
             ObjectIdentifier = "id2"
         });
         _arrangeContext.SaveEntity(datawallet);
