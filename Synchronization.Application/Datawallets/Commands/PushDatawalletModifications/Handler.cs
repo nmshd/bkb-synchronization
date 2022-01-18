@@ -110,7 +110,7 @@ public class Handler : IRequestHandler<PushDatawalletModificationsCommand, PushD
         if (_datawallet.LatestModification != null && _datawallet.LatestModification.Index != _request.LocalIndex)
             throw new OperationFailedException(ApplicationErrors.Datawallet.DatawalletNotUpToDate(_request.LocalIndex, _datawallet.LatestModification.Index));
     }
-    
+
     private async Task Save(DatawalletModification[] modifications)
     {
         await _dbContext.Set<DatawalletModification>().AddRangeAsync(modifications, _cancellationToken);
