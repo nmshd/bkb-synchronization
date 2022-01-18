@@ -230,12 +230,7 @@ public class HandlerTests
     }
 
     #region CreateHandler
-
-    private Handler CreateHandlerWithImmediateSave()
-    {
-        return CreateHandler(_activeIdentity, _activeDevice, CreateDbContext());
-    }
-
+    
     private ApplicationDbContext CreateDbContext()
     {
         return new ApplicationDbContext(_dbOptions);
