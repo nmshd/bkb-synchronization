@@ -9,7 +9,6 @@ using FluentAssertions;
 using Synchronization.Application.AutoMapper;
 using Synchronization.Application.Datawallets.DTOs;
 using Synchronization.Application.SyncRuns.Commands.FinalizeSyncRun;
-using Synchronization.Domain.Entities;
 using Synchronization.Infrastructure.Persistence.Database;
 using Xunit;
 
@@ -22,7 +21,7 @@ public class HandlerTests : RequestHandlerTestsBase<ApplicationDbContext>
 
     public HandlerTests()
     {
-        _arrangeContext.SaveEntity(new Datawallet(new Datawallet.DatawalletVersion(1), _activeIdentity));
+        _arrangeContext.SaveEntity(new Domain.Entities.Datawallet(new Domain.Entities.Datawallet.DatawalletVersion(1), _activeIdentity));
     }
 
     [Fact]

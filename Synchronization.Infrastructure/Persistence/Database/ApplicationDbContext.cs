@@ -27,7 +27,7 @@ public class ApplicationDbContext : AbstractDbContextBase, ISynchronizationDbCon
     public async Task<GetDatawalletModificationsResult> GetDatawalletModifications(IdentityAddress activeIdentity, long? localIndex, PaginationFilter paginationFilter)
     {
         var query = DatawalletModifications
-            .FromSqlInterpolated($"SELECT * FROM(SELECT *, ROW_NUMBER() OVER(PARTITION BY ObjectIdentifier, Type, PayloadCategory ORDER BY CreatedAt DESC) AS rank FROM [DatawalletModifications] m1 WHERE CreatedBy = {activeIdentity.StringValue} AND [Index] > {localIndex ?? -1}) AS ignoreDuplicates WHERE rank = 1")
+            .FromSqlInterpolated($"SELECT * FROM(SELECT *, ROW_NUMBER() OVER(PARTITION BY ObjectIdentifier, Type, PayloadCategory ORDER BY [Index] DESC) AS rank FROM [DatawalletModifications] m1 WHERE CreatedBy = {activeIdentity.StringValue} AND [Index] > {localIndex ?? -1}) AS ignoreDuplicates WHERE rank = 1")
             .AsNoTracking();
 
         var totalNumberOfItems = await query.CountAsync();

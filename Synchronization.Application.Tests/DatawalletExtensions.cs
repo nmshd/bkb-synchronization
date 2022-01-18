@@ -12,7 +12,6 @@ public static class DatawalletExtensions
 
     public class AddModificationParameters
     {
-        public long Index { get; init; }
         public string ObjectIdentifier { get; init; } = "anIdentifier";
         public string PayloadCategory { get; init; } = "aPayloadCategory";
         public DeviceId CreatedByDevice { get; init; } = TestDataGenerator.CreateRandomDeviceId();

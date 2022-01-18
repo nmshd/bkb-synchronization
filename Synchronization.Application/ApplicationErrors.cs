@@ -7,9 +7,12 @@ public static class ApplicationErrors
 {
     public static class Datawallet
     {
-        public static ApplicationError DatawalletNotUpToDate(long? localIndex = 0, long latestIndex = 0)
+        public static ApplicationError DatawalletNotUpToDate(long? localIndex = -100, long latestIndex = -100)
         {
-            return new ApplicationError("error.platform.validation.datawallet.datawalletNotUpToDate", $"The sent localIndex ({localIndex}) does not match the index of the latest modification ({latestIndex}). This probably means that your local datawallet is not up to date. Make sure you applied all modifications from the backbone before pushing a new modification.");
+            var localIndexString = localIndex == -100 ? " " : $" '{localIndex?.ToString() ?? "null"}' ";
+            var latestIndexString = localIndex == -100 ? "" : $" ('{latestIndex}') ";
+
+            return new ApplicationError("error.platform.validation.datawallet.datawalletNotUpToDate", $"The sent localIndex{localIndexString}does not match the index of the latest modification{latestIndexString}. This probably means that your local datawallet is not up to date. Make sure you applied all modifications from the backbone before pushing a new modification.");
         }
 
         public static ApplicationError CannotPushModificationsDuringActiveSyncRun()
@@ -45,9 +48,10 @@ public static class ApplicationErrors
             return new ApplicationError("error.platform.validation.syncRun.cannotReadExternalEventsOfASyncRunStartedByAnotherDevice", "This sync was started by another device. Only that device can read the corresponding external events.");
         }
 
-        public static ApplicationError CannotStartSyncRunWhenAnotherSyncRunIsRunning()
+        public static ApplicationError CannotStartSyncRunWhenAnotherSyncRunIsRunning(SyncRunId idOfRunningSyncRun = null)
         {
-            return new ApplicationError("error.platform.validation.syncRun.cannotStartSyncRunWhenAnotherSyncRunIsRunning", "Another sync run is currently active. There can only be one active sync run at a time. Try again in a few seconds.");
+            var idString = idOfRunningSyncRun == null ? "" : $" (ID: {idOfRunningSyncRun})";
+            return new ApplicationError("error.platform.validation.syncRun.cannotStartSyncRunWhenAnotherSyncRunIsRunning", $"Another sync run is currently active{idString}. There can only be one active sync run at a time. Try again in a few seconds.");
         }
 
         public static ApplicationError UnexpectedSyncRunType(SyncRun.SyncRunType expectedType)
