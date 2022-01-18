@@ -48,9 +48,10 @@ public static class ApplicationErrors
             return new ApplicationError("error.platform.validation.syncRun.cannotReadExternalEventsOfASyncRunStartedByAnotherDevice", "This sync was started by another device. Only that device can read the corresponding external events.");
         }
 
-        public static ApplicationError CannotStartSyncRunWhenAnotherSyncRunIsRunning()
+        public static ApplicationError CannotStartSyncRunWhenAnotherSyncRunIsRunning(SyncRunId idOfRunningSyncRun = null)
         {
-            return new ApplicationError("error.platform.validation.syncRun.cannotStartSyncRunWhenAnotherSyncRunIsRunning", "Another sync run is currently active. There can only be one active sync run at a time. Try again in a few seconds.");
+            var idString = idOfRunningSyncRun == null ? "" : $" (ID: {idOfRunningSyncRun})";
+            return new ApplicationError("error.platform.validation.syncRun.cannotStartSyncRunWhenAnotherSyncRunIsRunning", $"Another sync run is currently active{idString}. There can only be one active sync run at a time. Try again in a few seconds.");
         }
 
         public static ApplicationError UnexpectedSyncRunType(SyncRun.SyncRunType expectedType)
