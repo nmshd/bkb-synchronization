@@ -5,6 +5,7 @@ using Enmeshed.DevelopmentKit.Identity.ValueObjects;
 using Enmeshed.UnitTestTools.TestDoubles.Fakes;
 using FakeItEasy;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Synchronization.Application.AutoMapper;
 using Synchronization.Application.Datawallets.Queries.GetModifications;
 using Synchronization.Domain.Entities;
@@ -25,6 +26,8 @@ public class HandlerTests
 
     public HandlerTests()
     {
+        AssertionScope.Current.FormattingOptions.MaxLines = 1000;
+
         (_arrangeContext, _, _actContext) = FakeDbContextFactory.CreateDbContexts<ApplicationDbContext>();
         _handler = CreateHandler();
     }
