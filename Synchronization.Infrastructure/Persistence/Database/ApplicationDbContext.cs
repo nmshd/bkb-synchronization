@@ -29,14 +29,14 @@ public class ApplicationDbContext : AbstractDbContextBase, ISynchronizationDbCon
         var query = DatawalletModifications
             .FromSqlInterpolated($"SELECT * FROM(SELECT *, ROW_NUMBER() OVER(PARTITION BY ObjectIdentifier, Type, PayloadCategory ORDER BY [Index] DESC) AS rank FROM [DatawalletModifications] m1 WHERE CreatedBy = {activeIdentity.StringValue} AND [Index] > {localIndex ?? -1}) AS ignoreDuplicates WHERE rank = 1")
             .AsNoTracking();
-
-        var totalNumberOfItems = await query.CountAsync();
-
+        
         query = query
             .OrderBy(m => m.Index)
             .Paged(paginationFilter);
 
         var items = await query.ToListAsync();
+
+        var totalNumberOfItems = items.Count < paginationFilter.PageSize ? items.Count : await query.CountAsync();
 
         return new GetDatawalletModificationsResult {TotalNumberOfItems = totalNumberOfItems, Items = items};
     }
@@ -156,15 +156,15 @@ public class ApplicationDbContext : AbstractDbContextBase, ISynchronizationDbCon
         var query = ExternalEvents
             .WithOwner(owner)
             .AssignedToSyncRun(syncRunId);
-
-        var totalRecords = await query.CountAsync(cancellationToken);
-
-        var events = await query
+        
+        var items = await query
             .OrderBy(d => d.Index)
             .Paged(paginationFilter)
             .ToListAsync(cancellationToken);
 
-        return (events, totalRecords);
+        var totalNumberOfItems = items.Count < paginationFilter.PageSize ? items.Count : await query.CountAsync(cancellationToken);
+
+        return (items, totalNumberOfItems);
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
