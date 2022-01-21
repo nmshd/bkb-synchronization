@@ -12,8 +12,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Enmeshed.BuildingBlocks.Application.Abstractions" Version="1.0.4" />
-		<PackageReference Include="Enmeshed.BuildingBlocks.Infrastructure" Version="1.0.7" />
+		<PackageReference Include="Enmeshed.BuildingBlocks.Application.Abstractions" Version="1.0.5" />
+		<PackageReference Include="Enmeshed.BuildingBlocks.Infrastructure" Version="1.0.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
 		<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.1" />
