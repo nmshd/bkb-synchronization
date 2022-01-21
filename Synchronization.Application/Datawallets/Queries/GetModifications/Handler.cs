@@ -33,13 +33,13 @@ public class Handler : IRequestHandler<GetModificationsQuery, GetModificationsRe
         if (supportedDatawalletVersion < (datawallet?.Version ?? 0))
             throw new OperationFailedException(ApplicationErrors.Datawallet.InsufficientSupportedDatawalletVersion());
 
-        var modifications = await _dbContext.GetDatawalletModifications(_activeIdentity, request.LocalIndex, request.PaginationFilter);
+        var dbPaginationResult = await _dbContext.GetDatawalletModifications(_activeIdentity, request.LocalIndex, request.PaginationFilter);
 
-        var dtos = _mapper.Map<IEnumerable<DatawalletModificationDTO>>(modifications.Items).ToArray();
+        var dtos = _mapper.Map<IEnumerable<DatawalletModificationDTO>>(dbPaginationResult.ItemsOnPage).ToArray();
 
         await FillEncryptedPayloads(dtos);
 
-        return new GetModificationsResponse(dtos, request.PaginationFilter, modifications.TotalNumberOfItems);
+        return new GetModificationsResponse(dtos, request.PaginationFilter, dbPaginationResult.TotalNumberOfItems);
     }
 
     private async Task FillEncryptedPayloads(IEnumerable<DatawalletModificationDTO> modifications)
