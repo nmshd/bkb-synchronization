@@ -1,4 +1,5 @@
-﻿using Enmeshed.BuildingBlocks.Application.Extensions;
+﻿using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.Persistence.Database;
+using Enmeshed.BuildingBlocks.Application.Extensions;
 using Enmeshed.BuildingBlocks.Application.Pagination;
 using Enmeshed.BuildingBlocks.Infrastructure.Persistence.Database;
 using Enmeshed.DevelopmentKit.Identity.ValueObjects;
@@ -24,24 +25,16 @@ public class ApplicationDbContext : AbstractDbContextBase, ISynchronizationDbCon
     public DbSet<SyncRun> SyncRuns { get; set; }
     public DbSet<SyncError> SyncErrors { get; set; }
 
-    public async Task<GetDatawalletModificationsResult> GetDatawalletModifications(IdentityAddress activeIdentity, long? localIndex, PaginationFilter paginationFilter)
+    public async Task<DbPaginationResult<DatawalletModification>> GetDatawalletModifications(IdentityAddress activeIdentity, long? localIndex, PaginationFilter paginationFilter)
     {
-        var query = DatawalletModifications
+        var paginationResult = await DatawalletModifications
             .FromSqlInterpolated($"SELECT * FROM(SELECT *, ROW_NUMBER() OVER(PARTITION BY ObjectIdentifier, Type, PayloadCategory ORDER BY [Index] DESC) AS rank FROM [DatawalletModifications] m1 WHERE CreatedBy = {activeIdentity.StringValue} AND [Index] > {localIndex ?? -1}) AS ignoreDuplicates WHERE rank = 1")
-            .AsNoTracking();
+            .AsNoTracking()
+            .OrderAndPaginate(m => m.Index, paginationFilter);
 
-        var totalNumberOfItems = await query.CountAsync();
-
-        query = query
-            .OrderBy(m => m.Index)
-            .Paged(paginationFilter);
-
-        var items = await query.ToListAsync();
-
-        return new GetDatawalletModificationsResult {TotalNumberOfItems = totalNumberOfItems, Items = items};
+        return paginationResult;
     }
-
-
+    
     public async Task<Datawallet> GetDatawalletForInsertion(IdentityAddress owner, CancellationToken cancellationToken)
     {
         var datawallet = await Datawallets
@@ -151,20 +144,14 @@ public class ApplicationDbContext : AbstractDbContextBase, ISynchronizationDbCon
         return unsyncedEvents;
     }
 
-    public async Task<(IEnumerable<ExternalEvent> firstPage, int totalRecords)> GetExternalEventsOfSyncRun(PaginationFilter paginationFilter, IdentityAddress owner, SyncRunId syncRunId, CancellationToken cancellationToken)
+    public async Task<DbPaginationResult<ExternalEvent>> GetExternalEventsOfSyncRun(PaginationFilter paginationFilter, IdentityAddress owner, SyncRunId syncRunId, CancellationToken cancellationToken)
     {
-        var query = ExternalEvents
+        var query = await ExternalEvents
             .WithOwner(owner)
-            .AssignedToSyncRun(syncRunId);
+            .AssignedToSyncRun(syncRunId)
+            .OrderAndPaginate(x => x.Index, paginationFilter);
 
-        var totalRecords = await query.CountAsync(cancellationToken);
-
-        var events = await query
-            .OrderBy(d => d.Index)
-            .Paged(paginationFilter)
-            .ToListAsync(cancellationToken);
-
-        return (events, totalRecords);
+        return query;
     }
 
     protected override void OnModelCreating(ModelBuilder builder)

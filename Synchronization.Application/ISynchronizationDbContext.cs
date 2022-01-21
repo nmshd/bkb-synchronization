@@ -8,7 +8,7 @@ namespace Synchronization.Application;
 
 public interface ISynchronizationDbContext : IDbContext
 {
-    Task<GetDatawalletModificationsResult> GetDatawalletModifications(IdentityAddress activeIdentity, long? localIndex, PaginationFilter paginationFilter);
+    Task<DbPaginationResult<DatawalletModification>> GetDatawalletModifications(IdentityAddress activeIdentity, long? localIndex, PaginationFilter paginationFilter);
 
     Task<Datawallet> GetDatawalletForInsertion(IdentityAddress owner, CancellationToken cancellationToken);
     Task<Datawallet> GetDatawallet(IdentityAddress owner, CancellationToken cancellationToken);
@@ -20,11 +20,5 @@ public interface ISynchronizationDbContext : IDbContext
     Task<SyncRun> GetSyncRunWithExternalEvents(SyncRunId syncRunId, IdentityAddress createdBy, CancellationToken cancellationToken);
     Task<SyncRun> GetPreviousSyncRunWithExternalEvents(IdentityAddress createdBy, CancellationToken cancellationToken);
     Task<List<ExternalEvent>> GetUnsyncedExternalEvents(IdentityAddress owner, byte maxErrorCount, CancellationToken cancellationToken);
-    Task<(IEnumerable<ExternalEvent> firstPage, int totalRecords)> GetExternalEventsOfSyncRun(PaginationFilter paginationFilter, IdentityAddress owner, SyncRunId syncRunId, CancellationToken cancellationToken);
-}
-
-public class GetDatawalletModificationsResult
-{
-    public IEnumerable<DatawalletModification> Items { get; set; }
-    public int TotalNumberOfItems { get; set; }
+    Task<DbPaginationResult<ExternalEvent>> GetExternalEventsOfSyncRun(PaginationFilter paginationFilter, IdentityAddress owner, SyncRunId syncRunId, CancellationToken cancellationToken);
 }

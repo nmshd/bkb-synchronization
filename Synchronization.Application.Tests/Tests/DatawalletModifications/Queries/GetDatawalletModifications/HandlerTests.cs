@@ -175,8 +175,6 @@ public class HandlerTests
         var datawalletOfAnotherIdentity = CreateDatawalletFor(anotherIdentity);
         var modificationOfAnotherIdentity = datawalletOfAnotherIdentity.AddModification(new DatawalletExtensions.AddModificationParameters());
 
-        var indexOfActiveIdentity = 0;
-
         var createId1Category1 = datawalletOfActiveIdentity.AddModification(new DatawalletExtensions.AddModificationParameters
         {
             Type = DatawalletModificationType.Create,

@@ -32,10 +32,10 @@ public class Handler : IRequestHandler<GetExternalEventsOfSyncRunQuery, GetExter
         if (syncRun.CreatedByDevice != _activeDevice)
             throw new OperationFailedException(ApplicationErrors.SyncRuns.CannotReadExternalEventsOfSyncRunStartedByAnotherDevice());
 
-        var (firstPage, totalRecords) = await _dbContext.GetExternalEventsOfSyncRun(request.PaginationFilter, _activeIdentity, syncRun.Id, cancellationToken);
+        var dbPaginationResult = await _dbContext.GetExternalEventsOfSyncRun(request.PaginationFilter, _activeIdentity, syncRun.Id, cancellationToken);
 
-        var dtos = _mapper.Map<IEnumerable<ExternalEventDTO>>(firstPage);
+        var dtos = _mapper.Map<IEnumerable<ExternalEventDTO>>(dbPaginationResult.ItemsOnPage);
 
-        return new GetExternalEventsOfSyncRunResponse(dtos, request.PaginationFilter, totalRecords);
+        return new GetExternalEventsOfSyncRunResponse(dtos, request.PaginationFilter, dbPaginationResult.TotalNumberOfItems);
     }
 }
