@@ -1,8 +1,12 @@
-﻿using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.Persistence.Database;
+﻿using System.Data;
+using System.Data.Common;
+using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.Persistence.Database;
 using Enmeshed.BuildingBlocks.Application.Extensions;
 using Enmeshed.BuildingBlocks.Application.Pagination;
 using Enmeshed.BuildingBlocks.Infrastructure.Persistence.Database;
 using Enmeshed.DevelopmentKit.Identity.ValueObjects;
+using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Synchronization.Application;
 using Synchronization.Application.Extensions;
@@ -27,8 +31,12 @@ public class ApplicationDbContext : AbstractDbContextBase, ISynchronizationDbCon
 
     public async Task<DbPaginationResult<DatawalletModification>> GetDatawalletModifications(IdentityAddress activeIdentity, long? localIndex, PaginationFilter paginationFilter)
     {
+        // Use SqlParameter here in order to define the type of the activeIdentity parameter explicitly. Otherwise nvarchar(4000) is used, which causes performance problems.
+        // (https://docs.microsoft.com/en-us/archive/msdn-magazine/2009/brownfield/how-data-access-code-affects-database-performance)
+        DbParameter activeIdentityParam = Database.IsSqlServer() ? new SqlParameter("createdBy", SqlDbType.Char, IdentityAddress.MAX_LENGTH, ParameterDirection.Input, false, 0, 0, "", DataRowVersion.Default, activeIdentity.StringValue) : new SqliteParameter("createdBy", activeIdentity.StringValue);
+
         var paginationResult = await DatawalletModifications
-            .FromSqlInterpolated($"SELECT * FROM(SELECT *, ROW_NUMBER() OVER(PARTITION BY ObjectIdentifier, Type, PayloadCategory ORDER BY [Index] DESC) AS rank FROM [DatawalletModifications] m1 WHERE CreatedBy = {activeIdentity.StringValue} AND [Index] > {localIndex ?? -1}) AS ignoreDuplicates WHERE rank = 1")
+            .FromSqlInterpolated($"SELECT * FROM(SELECT *, ROW_NUMBER() OVER(PARTITION BY ObjectIdentifier, Type, PayloadCategory ORDER BY [Index] DESC) AS rank FROM [DatawalletModifications] m1 WHERE CreatedBy = {activeIdentityParam} AND [Index] > {localIndex ?? -1}) AS ignoreDuplicates WHERE rank = 1")
             .AsNoTracking()
             .OrderAndPaginate(m => m.Index, paginationFilter);
 
