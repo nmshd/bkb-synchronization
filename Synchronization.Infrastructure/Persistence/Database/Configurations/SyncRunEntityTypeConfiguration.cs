@@ -15,11 +15,12 @@ public class SyncRunEntityTypeConfiguration : IEntityTypeConfiguration<SyncRun>
 
         builder.Ignore(x => x.IsFinalized);
 
+        builder.HasKey(x => x.Id);
+
         builder.Property(x => x.CreatedAt);
         builder.Property(x => x.EventCount);
+        builder.Property(x => x.CreatedBy);
+        builder.Property(x => x.CreatedByDevice);
 
-        builder.Property(x => x.Id).HasColumnType($"char({SyncRunId.MAX_LENGTH})");
-        builder.Property(x => x.CreatedBy).HasColumnType($"char({IdentityAddress.MAX_LENGTH})");
-        builder.Property(x => x.CreatedByDevice).HasColumnType($"char({DeviceId.MAX_LENGTH})");
     }
 }

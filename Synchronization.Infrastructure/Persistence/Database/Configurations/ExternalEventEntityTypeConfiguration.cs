@@ -14,9 +14,7 @@ public class ExternalEventEntityTypeConfiguration : IEntityTypeConfiguration<Ext
         builder.HasIndex(x => new {x.Owner, x.Index}).IsUnique();
         builder.HasIndex(x => new {x.Owner, x.SyncRunId});
 
-        builder.Property(x => x.Id).HasColumnType($"char({ExternalEventId.MAX_LENGTH})");
-        builder.Property(x => x.SyncRunId).HasColumnType($"char({SyncRunId.MAX_LENGTH})");
-        builder.Property(x => x.Owner).HasColumnType($"char({IdentityAddress.MAX_LENGTH})");
+        builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Type).HasMaxLength(50);
         builder.Property(x => x.CreatedAt);

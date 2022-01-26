@@ -4,6 +4,7 @@ using Enmeshed.BuildingBlocks.Application.Abstractions.Infrastructure.Persistenc
 using Enmeshed.BuildingBlocks.Application.Extensions;
 using Enmeshed.BuildingBlocks.Application.Pagination;
 using Enmeshed.BuildingBlocks.Infrastructure.Persistence.Database;
+using Enmeshed.BuildingBlocks.Infrastructure.Persistence.Database.ValueConverters;
 using Enmeshed.DevelopmentKit.Identity.ValueObjects;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
@@ -28,6 +29,25 @@ public class ApplicationDbContext : AbstractDbContextBase, ISynchronizationDbCon
     public DbSet<ExternalEvent> ExternalEvents { get; set; }
     public DbSet<SyncRun> SyncRuns { get; set; }
     public DbSet<SyncError> SyncErrors { get; set; }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        base.ConfigureConventions(configurationBuilder);
+
+        configurationBuilder.Properties<DatawalletId>().AreUnicode(false).AreFixedLength().HaveMaxLength(DatawalletId.MAX_LENGTH).HaveConversion<DatawalletIdEntityFrameworkValueConverter>();
+        configurationBuilder.Properties<Datawallet.DatawalletVersion>().AreUnicode(false).HaveConversion<DatawalletVersionEntityFrameworkValueConverter>();
+        configurationBuilder.Properties<DatawalletModificationId>().AreUnicode(false).AreFixedLength().HaveMaxLength(DatawalletModificationId.MAX_LENGTH).HaveConversion<DatawalletModificationIdEntityFrameworkValueConverter>();
+        configurationBuilder.Properties<SyncRunId>().AreUnicode(false).AreFixedLength().HaveMaxLength(SyncRunId.MAX_LENGTH).HaveConversion<SyncRunIdEntityFrameworkValueConverter>();
+        configurationBuilder.Properties<ExternalEventId>().AreUnicode(false).AreFixedLength().HaveMaxLength(ExternalEventId.MAX_LENGTH).HaveConversion<ExternalEventIdEntityFrameworkValueConverter>();
+        configurationBuilder.Properties<SyncErrorId>().AreUnicode(false).AreFixedLength().HaveMaxLength(SyncErrorId.MAX_LENGTH).HaveConversion<SyncErrorIdEntityFrameworkValueConverter>();
+    }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        
+        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+    }
 
     public async Task<DbPaginationResult<DatawalletModification>> GetDatawalletModifications(IdentityAddress activeIdentity, long? localIndex, PaginationFilter paginationFilter)
     {
@@ -160,19 +180,5 @@ public class ApplicationDbContext : AbstractDbContextBase, ISynchronizationDbCon
             .OrderAndPaginate(x => x.Index, paginationFilter);
 
         return query;
-    }
-
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        base.OnModelCreating(builder);
-
-        builder.UseValueConverter(new DatawalletIdEntityFrameworkValueConverter());
-        builder.UseValueConverter(new DatawalletVersionEntityFrameworkValueConverter());
-        builder.UseValueConverter(new DatawalletModificationIdEntityFrameworkValueConverter());
-        builder.UseValueConverter(new SyncRunIdEntityFrameworkValueConverter());
-        builder.UseValueConverter(new ExternalEventIdEntityFrameworkValueConverter());
-        builder.UseValueConverter(new SyncErrorIdEntityFrameworkValueConverter());
-
-        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }
