@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Enmeshed.DevelopmentKit.Identity.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Synchronization.Domain.Entities;
 
@@ -10,7 +11,7 @@ public class DatawalletEntityTypeConfiguration : IEntityTypeConfiguration<Datawa
     {
         builder.HasIndex(p => p.Owner).IsUnique();
 
-        builder.Property(x => x.Id).HasColumnType($"char({DatawalletId.MAX_LENGTH})");
+        builder.HasKey(x => x.Id);
 
         builder.HasMany(dw => dw.Modifications).WithOne(m => m.Datawallet);
 

@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Synchronization.Infrastructure.Persistence;
+using Synchronization.Infrastructure.Persistence.Database;
+
+#nullable disable
 
 namespace Synchronization.Infrastructure.Persistence.Database.Migrations
 {
@@ -15,20 +17,28 @@ namespace Synchronization.Infrastructure.Persistence.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.8")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("Synchronization.Domain.Entities.Datawallet", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("char(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("char(20)")
+                        .IsFixedLength();
 
                     b.Property<string>("Owner")
                         .IsRequired()
-                        .HasColumnType("nvarchar(36)");
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
+                        .HasColumnType("char(36)")
+                        .IsFixedLength();
 
                     b.Property<ushort>("Version")
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -42,7 +52,10 @@ namespace Synchronization.Infrastructure.Persistence.Database.Migrations
             modelBuilder.Entity("Synchronization.Domain.Entities.DatawalletModification", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("char(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("char(20)")
+                        .IsFixedLength();
 
                     b.Property<string>("Collection")
                         .IsRequired()
@@ -54,16 +67,26 @@ namespace Synchronization.Infrastructure.Persistence.Database.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("char(36)");
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
+                        .HasColumnType("char(36)")
+                        .IsFixedLength();
 
                     b.Property<string>("CreatedByDevice")
                         .IsRequired()
-                        .HasColumnType("char(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("char(20)")
+                        .IsFixedLength();
 
                     b.Property<string>("DatawalletId")
-                        .HasColumnType("char(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("char(20)")
+                        .IsFixedLength();
 
                     b.Property<ushort>("DatawalletVersion")
+                        .IsUnicode(false)
                         .HasColumnType("int");
 
                     b.Property<long>("Index")
@@ -96,7 +119,10 @@ namespace Synchronization.Infrastructure.Persistence.Database.Migrations
             modelBuilder.Entity("Synchronization.Domain.Entities.Sync.ExternalEvent", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("char(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("char(20)")
+                        .IsFixedLength();
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -106,7 +132,10 @@ namespace Synchronization.Infrastructure.Persistence.Database.Migrations
 
                     b.Property<string>("Owner")
                         .IsRequired()
-                        .HasColumnType("char(36)");
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
+                        .HasColumnType("char(36)")
+                        .IsFixedLength();
 
                     b.Property<string>("Payload")
                         .IsRequired()
@@ -117,7 +146,10 @@ namespace Synchronization.Infrastructure.Persistence.Database.Migrations
                         .HasColumnType("tinyint");
 
                     b.Property<string>("SyncRunId")
-                        .HasColumnType("char(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("char(20)")
+                        .IsFixedLength();
 
                     b.Property<int>("Type")
                         .HasMaxLength(50)
@@ -138,7 +170,10 @@ namespace Synchronization.Infrastructure.Persistence.Database.Migrations
             modelBuilder.Entity("Synchronization.Domain.Entities.Sync.SyncError", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("char(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("char(20)")
+                        .IsFixedLength();
 
                     b.Property<string>("ErrorCode")
                         .IsRequired()
@@ -147,11 +182,17 @@ namespace Synchronization.Infrastructure.Persistence.Database.Migrations
 
                     b.Property<string>("ExternalEventId")
                         .IsRequired()
-                        .HasColumnType("char(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("char(20)")
+                        .IsFixedLength();
 
                     b.Property<string>("SyncRunId")
                         .IsRequired()
-                        .HasColumnType("char(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("char(20)")
+                        .IsFixedLength();
 
                     b.HasKey("Id");
 
@@ -166,18 +207,27 @@ namespace Synchronization.Infrastructure.Persistence.Database.Migrations
             modelBuilder.Entity("Synchronization.Domain.Entities.Sync.SyncRun", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("char(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("char(20)")
+                        .IsFixedLength();
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("char(36)");
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
+                        .HasColumnType("char(36)")
+                        .IsFixedLength();
 
                     b.Property<string>("CreatedByDevice")
                         .IsRequired()
-                        .HasColumnType("char(20)");
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("char(20)")
+                        .IsFixedLength();
 
                     b.Property<int>("EventCount")
                         .HasColumnType("int");

@@ -12,9 +12,12 @@ public class DatawalletModificationEntityTypeConfiguration : IEntityTypeConfigur
         builder.HasIndex(p => new {p.CreatedBy, p.Index}).IsUnique();
         builder.HasIndex(p => p.CreatedBy);
 
-        builder.Property(x => x.Id).HasColumnType($"char({DatawalletModificationId.MAX_LENGTH})");
-        builder.Property(x => x.CreatedBy).HasColumnType($"char({IdentityAddress.MAX_LENGTH})");
-        builder.Property(x => x.CreatedByDevice).HasColumnType($"char({DeviceId.MAX_LENGTH})");
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.CreatedBy);
+        builder.Property(x => x.CreatedAt);
+        builder.Property(x => x.CreatedByDevice);
+        builder.Property(x => x.DatawalletVersion);
 
         builder.Property(x => x.Collection).HasMaxLength(50);
         builder.Property(x => x.ObjectIdentifier).HasMaxLength(100);

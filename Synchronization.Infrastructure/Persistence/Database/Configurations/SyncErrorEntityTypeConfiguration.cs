@@ -10,9 +10,7 @@ public class SyncErrorEntityTypeConfiguration : IEntityTypeConfiguration<SyncErr
     {
         builder.HasIndex(x => new {x.SyncRunId, x.ExternalEventId}).IsUnique();
 
-        builder.Property(x => x.Id).HasColumnType($"char({SyncErrorId.MAX_LENGTH})");
-        builder.Property(x => x.SyncRunId).HasColumnType($"char({SyncRunId.MAX_LENGTH})");
-        builder.Property(x => x.ExternalEventId).HasColumnType($"char({ExternalEventId.MAX_LENGTH})");
+        builder.HasKey(x => x.Id);
 
         builder.Property(x => x.ErrorCode).HasMaxLength(50);
     }
